@@ -55,11 +55,14 @@ pipeline
         {
             steps
             {
-                withSonarQubeEnv(credentialsId: 'jenkins-sonar-token')
-                 {   
-                    sh 'mvn sonar:sonar'
+               withSonarQubeEnv('SonarQube')
+                {
+                  withCredentials([string(credentialsId: 'jenkins-sonar-token', variable: 'SONAR_TOKEN')]) 
+                  {
+                     sh 'mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
+                  }
                 }
-            }
+           }
         }
     }
 
