@@ -49,6 +49,18 @@ pipeline
                 sh 'mvn test'
             }
         }
+
+        //SonarQube COde Analysis
+        stage("Sonarqube analysis")
+        {
+            steps
+            {
+                withSonarQubeEnv(credentialsId: 'jenkins-sonar-token')
+                 {   
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
     }
 
 }
