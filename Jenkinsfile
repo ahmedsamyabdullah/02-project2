@@ -19,7 +19,11 @@ pipeline
         }
         stage("Checkout From SCM")
         {
-            git branch: 'main', credentialsId: 'web-app-jenkins', url: 'https://github.com/ahmedsamyabdullah/02-project2.git'
+            steps
+            {
+                git branch: 'main', credentialsId: 'web-app-jenkins', url: 'https://github.com/ahmedsamyabdullah/02-project2.git'
+            }
+            
         }
     }
 
