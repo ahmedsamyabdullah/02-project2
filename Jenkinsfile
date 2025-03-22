@@ -3,12 +3,25 @@ pipeline
 {
     // Specify Agent 
     agent any
+
     // Install some tools
     tools
     {
         jdk "java17"
         maven "Maven3"
     }
+
+    // Set Environment variables
+    environment
+    {
+        APP_NAME    = "02-project2"
+        RELEASE     = "1.0.0"
+        DOCKER_USER = "itahmedsamy"
+        DOCKER_PASS = "pass-token"    // This is secret pass of dockerhub
+        IMAGE_NAME  = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        IMAGE_TAG   = "${RELEASE}-${BUILD_NUMBER}"
+    }
+
     // Start pipeline Stages
     stages
     {
@@ -63,6 +76,35 @@ pipeline
                   }
                 }
            }
+        }
+
+        // Build Docker Image
+        stage("Docker Build")
+        {
+            steps
+            {
+                script
+                {
+                    sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+                }
+                
+            }
+        }
+
+        // Push Docker-Image to DockerHub
+        stage("Docker Push")
+        {
+            steps
+            {
+                script
+                {
+                    withCredentials([usernamePassword(credentialsId: 'pass-token', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')])
+                    {
+                        sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                        sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
+                    }
+                }
+            }
         }
     }
 

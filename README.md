@@ -3,3 +3,5 @@
 1. CI/CD pipeline using  Jenkins.
 2. Deploy Doker image to k8s using jenkins.
 3. spring-boot web app runs on port= 8081
+4. Build docker image and push it to dockerhub
+
